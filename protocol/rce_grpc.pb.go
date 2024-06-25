@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RemoteCodeExecutorClient interface {
 	Spawn(ctx context.Context, opts ...grpc.CallOption) (RemoteCodeExecutor_SpawnClient, error)
+	Kill(ctx context.Context, in *PID, opts ...grpc.CallOption) (*KillResponse, error)
 }
 
 type remoteCodeExecutorClient struct {
@@ -64,11 +65,21 @@ func (x *remoteCodeExecutorSpawnClient) Recv() (*SpawnResponse, error) {
 	return m, nil
 }
 
+func (c *remoteCodeExecutorClient) Kill(ctx context.Context, in *PID, opts ...grpc.CallOption) (*KillResponse, error) {
+	out := new(KillResponse)
+	err := c.cc.Invoke(ctx, "/protocol.RemoteCodeExecutor/Kill", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RemoteCodeExecutorServer is the server API for RemoteCodeExecutor service.
 // All implementations must embed UnimplementedRemoteCodeExecutorServer
 // for forward compatibility
 type RemoteCodeExecutorServer interface {
 	Spawn(RemoteCodeExecutor_SpawnServer) error
+	Kill(context.Context, *PID) (*KillResponse, error)
 	mustEmbedUnimplementedRemoteCodeExecutorServer()
 }
 
@@ -78,6 +89,9 @@ type UnimplementedRemoteCodeExecutorServer struct {
 
 func (UnimplementedRemoteCodeExecutorServer) Spawn(RemoteCodeExecutor_SpawnServer) error {
 	return status.Errorf(codes.Unimplemented, "method Spawn not implemented")
+}
+func (UnimplementedRemoteCodeExecutorServer) Kill(context.Context, *PID) (*KillResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Kill not implemented")
 }
 func (UnimplementedRemoteCodeExecutorServer) mustEmbedUnimplementedRemoteCodeExecutorServer() {}
 
@@ -118,13 +132,36 @@ func (x *remoteCodeExecutorSpawnServer) Recv() (*SpawnRequest, error) {
 	return m, nil
 }
 
+func _RemoteCodeExecutor_Kill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PID)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemoteCodeExecutorServer).Kill(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protocol.RemoteCodeExecutor/Kill",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemoteCodeExecutorServer).Kill(ctx, req.(*PID))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RemoteCodeExecutor_ServiceDesc is the grpc.ServiceDesc for RemoteCodeExecutor service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var RemoteCodeExecutor_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "protocol.RemoteCodeExecutor",
 	HandlerType: (*RemoteCodeExecutorServer)(nil),
-	Methods:     []grpc.MethodDesc{},
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Kill",
+			Handler:    _RemoteCodeExecutor_Kill_Handler,
+		},
+	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Spawn",

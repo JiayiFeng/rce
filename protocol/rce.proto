@@ -65,6 +65,11 @@ message SpawnResponse {
   }
 }
 
+message KillResponse {
+  string error = 1;
+}
+
 service RemoteCodeExecutor {
   rpc Spawn(stream SpawnRequest) returns (stream SpawnResponse) {}
+  rpc Kill(PID) returns (KillResponse){}
 }

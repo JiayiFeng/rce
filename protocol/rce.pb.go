@@ -285,6 +285,53 @@ func (*SpawnResponse_Exit_) isSpawnResponse_Payload() {}
 
 func (*SpawnResponse_Pid) isSpawnResponse_Payload() {}
 
+type KillResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Error string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
+}
+
+func (x *KillResponse) Reset() {
+	*x = KillResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rce_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *KillResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*KillResponse) ProtoMessage() {}
+
+func (x *KillResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_rce_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use KillResponse.ProtoReflect.Descriptor instead.
+func (*KillResponse) Descriptor() ([]byte, []int) {
+	return file_rce_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *KillResponse) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
 type SpawnRequest_File struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -299,7 +346,7 @@ type SpawnRequest_File struct {
 func (x *SpawnRequest_File) Reset() {
 	*x = SpawnRequest_File{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rce_proto_msgTypes[3]
+		mi := &file_rce_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -312,7 +359,7 @@ func (x *SpawnRequest_File) String() string {
 func (*SpawnRequest_File) ProtoMessage() {}
 
 func (x *SpawnRequest_File) ProtoReflect() protoreflect.Message {
-	mi := &file_rce_proto_msgTypes[3]
+	mi := &file_rce_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -371,7 +418,7 @@ type SpawnRequest_Head struct {
 func (x *SpawnRequest_Head) Reset() {
 	*x = SpawnRequest_Head{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rce_proto_msgTypes[4]
+		mi := &file_rce_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -384,7 +431,7 @@ func (x *SpawnRequest_Head) String() string {
 func (*SpawnRequest_Head) ProtoMessage() {}
 
 func (x *SpawnRequest_Head) ProtoReflect() protoreflect.Message {
-	mi := &file_rce_proto_msgTypes[4]
+	mi := &file_rce_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -444,7 +491,7 @@ type SpawnRequest_Start struct {
 func (x *SpawnRequest_Start) Reset() {
 	*x = SpawnRequest_Start{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rce_proto_msgTypes[5]
+		mi := &file_rce_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -457,7 +504,7 @@ func (x *SpawnRequest_Start) String() string {
 func (*SpawnRequest_Start) ProtoMessage() {}
 
 func (x *SpawnRequest_Start) ProtoReflect() protoreflect.Message {
-	mi := &file_rce_proto_msgTypes[5]
+	mi := &file_rce_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -484,7 +531,7 @@ type SpawnRequest_Stdin struct {
 func (x *SpawnRequest_Stdin) Reset() {
 	*x = SpawnRequest_Stdin{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rce_proto_msgTypes[6]
+		mi := &file_rce_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -497,7 +544,7 @@ func (x *SpawnRequest_Stdin) String() string {
 func (*SpawnRequest_Stdin) ProtoMessage() {}
 
 func (x *SpawnRequest_Stdin) ProtoReflect() protoreflect.Message {
-	mi := &file_rce_proto_msgTypes[6]
+	mi := &file_rce_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -532,7 +579,7 @@ type SpawnRequest_Head_Env struct {
 func (x *SpawnRequest_Head_Env) Reset() {
 	*x = SpawnRequest_Head_Env{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rce_proto_msgTypes[7]
+		mi := &file_rce_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -545,7 +592,7 @@ func (x *SpawnRequest_Head_Env) String() string {
 func (*SpawnRequest_Head_Env) ProtoMessage() {}
 
 func (x *SpawnRequest_Head_Env) ProtoReflect() protoreflect.Message {
-	mi := &file_rce_proto_msgTypes[7]
+	mi := &file_rce_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -586,7 +633,7 @@ type SpawnResponse_Stdout struct {
 func (x *SpawnResponse_Stdout) Reset() {
 	*x = SpawnResponse_Stdout{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rce_proto_msgTypes[8]
+		mi := &file_rce_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -599,7 +646,7 @@ func (x *SpawnResponse_Stdout) String() string {
 func (*SpawnResponse_Stdout) ProtoMessage() {}
 
 func (x *SpawnResponse_Stdout) ProtoReflect() protoreflect.Message {
-	mi := &file_rce_proto_msgTypes[8]
+	mi := &file_rce_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -633,7 +680,7 @@ type SpawnResponse_Stderr struct {
 func (x *SpawnResponse_Stderr) Reset() {
 	*x = SpawnResponse_Stderr{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rce_proto_msgTypes[9]
+		mi := &file_rce_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -646,7 +693,7 @@ func (x *SpawnResponse_Stderr) String() string {
 func (*SpawnResponse_Stderr) ProtoMessage() {}
 
 func (x *SpawnResponse_Stderr) ProtoReflect() protoreflect.Message {
-	mi := &file_rce_proto_msgTypes[9]
+	mi := &file_rce_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -680,7 +727,7 @@ type SpawnResponse_Exit struct {
 func (x *SpawnResponse_Exit) Reset() {
 	*x = SpawnResponse_Exit{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rce_proto_msgTypes[10]
+		mi := &file_rce_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -693,7 +740,7 @@ func (x *SpawnResponse_Exit) String() string {
 func (*SpawnResponse_Exit) ProtoMessage() {}
 
 func (x *SpawnResponse_Exit) ProtoReflect() protoreflect.Message {
-	mi := &file_rce_proto_msgTypes[10]
+	mi := &file_rce_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -780,15 +827,20 @@ var file_rce_proto_rawDesc = []byte{
 	0x0c, 0x52, 0x06, 0x73, 0x74, 0x64, 0x65, 0x72, 0x72, 0x1a, 0x1a, 0x0a, 0x04, 0x45, 0x78, 0x69,
 	0x74, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52,
 	0x04, 0x63, 0x6f, 0x64, 0x65, 0x42, 0x09, 0x0a, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64,
-	0x32, 0x54, 0x0a, 0x12, 0x52, 0x65, 0x6d, 0x6f, 0x74, 0x65, 0x43, 0x6f, 0x64, 0x65, 0x45, 0x78,
-	0x65, 0x63, 0x75, 0x74, 0x6f, 0x72, 0x12, 0x3e, 0x0a, 0x05, 0x53, 0x70, 0x61, 0x77, 0x6e, 0x12,
-	0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x2e, 0x53, 0x70, 0x61, 0x77, 0x6e,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63,
-	0x6f, 0x6c, 0x2e, 0x53, 0x70, 0x61, 0x77, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x42, 0x21, 0x5a, 0x1f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
-	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x72, 0x65, 0x79, 0x6f, 0x75, 0x6e, 0x67, 0x2f, 0x72, 0x63, 0x65,
-	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x22, 0x24, 0x0a, 0x0c, 0x4b, 0x69, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x14, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x32, 0x85, 0x01, 0x0a, 0x12, 0x52, 0x65, 0x6d, 0x6f, 0x74,
+	0x65, 0x43, 0x6f, 0x64, 0x65, 0x45, 0x78, 0x65, 0x63, 0x75, 0x74, 0x6f, 0x72, 0x12, 0x3e, 0x0a,
+	0x05, 0x53, 0x70, 0x61, 0x77, 0x6e, 0x12, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f,
+	0x6c, 0x2e, 0x53, 0x70, 0x61, 0x77, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17,
+	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x2e, 0x53, 0x70, 0x61, 0x77, 0x6e, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x12, 0x2f, 0x0a,
+	0x04, 0x4b, 0x69, 0x6c, 0x6c, 0x12, 0x0d, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c,
+	0x2e, 0x50, 0x49, 0x44, 0x1a, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x2e,
+	0x4b, 0x69, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x21,
+	0x5a, 0x1f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x72, 0x65, 0x79,
+	0x6f, 0x75, 0x6e, 0x67, 0x2f, 0x72, 0x63, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f,
+	0x6c, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -803,34 +855,37 @@ func file_rce_proto_rawDescGZIP() []byte {
 	return file_rce_proto_rawDescData
 }
 
-var file_rce_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_rce_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_rce_proto_goTypes = []interface{}{
 	(*SpawnRequest)(nil),          // 0: protocol.SpawnRequest
 	(*PID)(nil),                   // 1: protocol.PID
 	(*SpawnResponse)(nil),         // 2: protocol.SpawnResponse
-	(*SpawnRequest_File)(nil),     // 3: protocol.SpawnRequest.File
-	(*SpawnRequest_Head)(nil),     // 4: protocol.SpawnRequest.Head
-	(*SpawnRequest_Start)(nil),    // 5: protocol.SpawnRequest.Start
-	(*SpawnRequest_Stdin)(nil),    // 6: protocol.SpawnRequest.Stdin
-	(*SpawnRequest_Head_Env)(nil), // 7: protocol.SpawnRequest.Head.Env
-	(*SpawnResponse_Stdout)(nil),  // 8: protocol.SpawnResponse.Stdout
-	(*SpawnResponse_Stderr)(nil),  // 9: protocol.SpawnResponse.Stderr
-	(*SpawnResponse_Exit)(nil),    // 10: protocol.SpawnResponse.Exit
+	(*KillResponse)(nil),          // 3: protocol.KillResponse
+	(*SpawnRequest_File)(nil),     // 4: protocol.SpawnRequest.File
+	(*SpawnRequest_Head)(nil),     // 5: protocol.SpawnRequest.Head
+	(*SpawnRequest_Start)(nil),    // 6: protocol.SpawnRequest.Start
+	(*SpawnRequest_Stdin)(nil),    // 7: protocol.SpawnRequest.Stdin
+	(*SpawnRequest_Head_Env)(nil), // 8: protocol.SpawnRequest.Head.Env
+	(*SpawnResponse_Stdout)(nil),  // 9: protocol.SpawnResponse.Stdout
+	(*SpawnResponse_Stderr)(nil),  // 10: protocol.SpawnResponse.Stderr
+	(*SpawnResponse_Exit)(nil),    // 11: protocol.SpawnResponse.Exit
 }
 var file_rce_proto_depIdxs = []int32{
-	3,  // 0: protocol.SpawnRequest.file:type_name -> protocol.SpawnRequest.File
-	4,  // 1: protocol.SpawnRequest.head:type_name -> protocol.SpawnRequest.Head
-	6,  // 2: protocol.SpawnRequest.stdin:type_name -> protocol.SpawnRequest.Stdin
-	5,  // 3: protocol.SpawnRequest.start:type_name -> protocol.SpawnRequest.Start
-	8,  // 4: protocol.SpawnResponse.stdout:type_name -> protocol.SpawnResponse.Stdout
-	9,  // 5: protocol.SpawnResponse.stderr:type_name -> protocol.SpawnResponse.Stderr
-	10, // 6: protocol.SpawnResponse.exit:type_name -> protocol.SpawnResponse.Exit
+	4,  // 0: protocol.SpawnRequest.file:type_name -> protocol.SpawnRequest.File
+	5,  // 1: protocol.SpawnRequest.head:type_name -> protocol.SpawnRequest.Head
+	7,  // 2: protocol.SpawnRequest.stdin:type_name -> protocol.SpawnRequest.Stdin
+	6,  // 3: protocol.SpawnRequest.start:type_name -> protocol.SpawnRequest.Start
+	9,  // 4: protocol.SpawnResponse.stdout:type_name -> protocol.SpawnResponse.Stdout
+	10, // 5: protocol.SpawnResponse.stderr:type_name -> protocol.SpawnResponse.Stderr
+	11, // 6: protocol.SpawnResponse.exit:type_name -> protocol.SpawnResponse.Exit
 	1,  // 7: protocol.SpawnResponse.pid:type_name -> protocol.PID
-	7,  // 8: protocol.SpawnRequest.Head.envs:type_name -> protocol.SpawnRequest.Head.Env
+	8,  // 8: protocol.SpawnRequest.Head.envs:type_name -> protocol.SpawnRequest.Head.Env
 	0,  // 9: protocol.RemoteCodeExecutor.Spawn:input_type -> protocol.SpawnRequest
-	2,  // 10: protocol.RemoteCodeExecutor.Spawn:output_type -> protocol.SpawnResponse
-	10, // [10:11] is the sub-list for method output_type
-	9,  // [9:10] is the sub-list for method input_type
+	1,  // 10: protocol.RemoteCodeExecutor.Kill:input_type -> protocol.PID
+	2,  // 11: protocol.RemoteCodeExecutor.Spawn:output_type -> protocol.SpawnResponse
+	3,  // 12: protocol.RemoteCodeExecutor.Kill:output_type -> protocol.KillResponse
+	11, // [11:13] is the sub-list for method output_type
+	9,  // [9:11] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name
 	9,  // [9:9] is the sub-list for extension extendee
 	0,  // [0:9] is the sub-list for field type_name
@@ -879,7 +934,7 @@ func file_rce_proto_init() {
 			}
 		}
 		file_rce_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SpawnRequest_File); i {
+			switch v := v.(*KillResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -891,7 +946,7 @@ func file_rce_proto_init() {
 			}
 		}
 		file_rce_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SpawnRequest_Head); i {
+			switch v := v.(*SpawnRequest_File); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -903,7 +958,7 @@ func file_rce_proto_init() {
 			}
 		}
 		file_rce_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SpawnRequest_Start); i {
+			switch v := v.(*SpawnRequest_Head); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -915,7 +970,7 @@ func file_rce_proto_init() {
 			}
 		}
 		file_rce_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SpawnRequest_Stdin); i {
+			switch v := v.(*SpawnRequest_Start); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -927,7 +982,7 @@ func file_rce_proto_init() {
 			}
 		}
 		file_rce_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SpawnRequest_Head_Env); i {
+			switch v := v.(*SpawnRequest_Stdin); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -939,7 +994,7 @@ func file_rce_proto_init() {
 			}
 		}
 		file_rce_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SpawnResponse_Stdout); i {
+			switch v := v.(*SpawnRequest_Head_Env); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -951,7 +1006,7 @@ func file_rce_proto_init() {
 			}
 		}
 		file_rce_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SpawnResponse_Stderr); i {
+			switch v := v.(*SpawnResponse_Stdout); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -963,6 +1018,18 @@ func file_rce_proto_init() {
 			}
 		}
 		file_rce_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SpawnResponse_Stderr); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rce_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SpawnResponse_Exit); i {
 			case 0:
 				return &v.state
@@ -993,7 +1060,7 @@ func file_rce_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_rce_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
