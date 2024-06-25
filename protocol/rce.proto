@@ -11,7 +11,7 @@ message SpawnRequest {
     bool truncate = 4;
   }
 
-  message Entry {
+  message Head {
     string command = 1;
     repeated string args = 2;
 
@@ -22,8 +22,11 @@ message SpawnRequest {
     repeated Env envs = 3;
 
     bool has_stdin = 4;
-    string dir = 5; // empty means a temporary directory
+
+    string path = 5;
   }
+
+  message Start {}
 
   message Stdin {
     bytes stdin = 1;
@@ -31,8 +34,9 @@ message SpawnRequest {
 
   oneof payload {
     File file = 1;
-    Entry entry = 2;
+    Head head = 2;
     Stdin stdin = 3;
+    Start start = 4;
   }
 }
 
