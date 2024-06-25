@@ -196,8 +196,14 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 		log.Printf("Starting command with pty, cols: %d, rows: %d", col, row)
 		var pty_ *os.File
 		pty_, err = pty.StartWithSize(cmd, &pty.Winsize{Cols: uint16(col), Rows: uint16(row)})
-		s.Stdout = pty_
-		s.Stderr = pty_
+		if err != nil {
+			return nil, fmt.Errorf("failed to start command with pty: %w", err)
+		}
+		s.Stdout, err = os.Open(pty_.Name())
+		if err != nil {
+			return nil, fmt.Errorf("failed to open pty file: %w", err)
+		}
+		s.Stderr = os.DevNull
 		s.Stdin = pty_
 	} else {
 		s.Stdout, err = cmd.StdoutPipe()
@@ -215,9 +221,10 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 			}
 		}
 		err = cmd.Start()
-	}
-	if err != nil {
-		return nil, fmt.Errorf("failed to start command: %w", err)
+
+		if err != nil {
+			return nil, fmt.Errorf("failed to start command: %w", err)
+		}
 	}
 	s.ID = uuid.New().String()
 	outChan <- &stateOutput{
