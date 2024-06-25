@@ -56,12 +56,16 @@ message SpawnResponse {
   message Exit {
     int32 code = 1;
   }
+  message SystemError {
+    string error = 1;
+  }
 
   oneof payload {
     Stdout stdout = 1;
     Stderr stderr = 2;
     Exit exit = 3;
     PID pid = 4;
+    SystemError error = 5;
   }
 }
 
