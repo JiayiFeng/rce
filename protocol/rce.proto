@@ -3,6 +3,11 @@ package protocol;
 
 option go_package = "github.com/reyoung/rce/protocol";
 
+message WindowSize {
+  uint32 row = 1;
+  uint32 col = 2;
+}
+
 message SpawnRequest {
   message File {
     string filename = 1;
@@ -24,6 +29,9 @@ message SpawnRequest {
     bool has_stdin = 4;
 
     string path = 5;
+
+    bool allocate_pty = 6;
+    WindowSize window_size = 7;
   }
 
   message Start {}

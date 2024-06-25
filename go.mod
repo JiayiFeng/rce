@@ -4,8 +4,10 @@ go 1.22
 
 require (
 	emperror.dev/emperror v0.33.0
+	github.com/creack/pty v1.1.21
 	github.com/docopt/docopt-go v0.0.0-20180111231733-ee0de3bc6815
 	github.com/google/uuid v1.6.0
+	golang.org/x/term v0.18.0
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.2
 )

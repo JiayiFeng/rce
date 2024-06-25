@@ -4,8 +4,10 @@ import (
 	"context"
 	"emperror.dev/emperror"
 	"fmt"
+	"github.com/creack/pty"
 	"github.com/docopt/docopt-go"
 	"github.com/reyoung/rce/protocol"
+	"golang.org/x/term"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"io"
@@ -18,7 +20,7 @@ const docs = `Remote Code Executor Client
 
 Usage:
     rce_client [--with-stdin] [--env=<e>]...
-        [--upload=<u>]... [--dir=<dir>] --address=<a> -- <command> <args>...
+        [--upload=<u>]... [--dir=<dir>] --address=<a> -- <command> [<args>]...
     rce_client -h | --help
     rce_client --version
 
@@ -68,6 +70,19 @@ func prepareHeadFrame(arguments docopt.Opts) (h *protocol.SpawnRequest_Head) {
 	command := arguments["<command>"].(string)
 	h.Command = command
 	h.Args = arguments["<args>"].([]string)
+
+	if term.IsTerminal(0) && h.HasStdin {
+		rows, cols, err := pty.Getsize(os.Stdin)
+		if err != nil {
+			panic(fmt.Errorf("failed to get terminal size: %w", err))
+		}
+		h.WindowSize = &protocol.WindowSize{
+			Row: uint32(rows),
+			Col: uint32(cols),
+		}
+		h.AllocatePty = true
+	}
+
 	return h
 }
 
@@ -177,6 +192,9 @@ func doRCE(arguments docopt.Opts, rceClient protocol.RemoteCodeExecutorClient, p
 
 func main() {
 	arguments, _ := docopt.ParseArgs(docs, nil, "Remote Code Executor Client 1.0")
+	if term.IsTerminal(0) {
+		panic2(term.MakeRaw(0))
+	}
 	addr := arguments["--address"].(string)
 	client := panic2(grpc.NewClient(addr, grpc.WithCredentialsBundle(insecure.NewBundle())))
 	defer client.Close()

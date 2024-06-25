@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/creack/pty"
 	"github.com/google/uuid"
 	"github.com/reyoung/rce/protocol"
 	"io"
@@ -178,12 +179,6 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 		}
 	}(s)
 
-	if head.HasStdin {
-		s.Stdin, err = cmd.StdinPipe()
-		if err != nil {
-			return nil, err
-		}
-	}
 	s.Stdout, err = cmd.StdoutPipe()
 	if err != nil {
 		return nil, err
@@ -194,7 +189,25 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 	}
 	outChan := make(chan *stateOutput, 1)
 	s.OutputChan = outChan
-	err = cmd.Start()
+	if head.AllocatePty {
+		col := head.GetWindowSize().GetCol()
+		if col == 0 {
+			col = 24
+		}
+		row := head.GetWindowSize().GetRow()
+		if row == 0 {
+			row = 80
+		}
+		s.Stdin, err = pty.StartWithSize(cmd, &pty.Winsize{Cols: uint16(col), Rows: uint16(row)})
+	} else {
+		if head.HasStdin {
+			s.Stdin, err = cmd.StdinPipe()
+			if err != nil {
+				return nil, err
+			}
+		}
+		err = cmd.Start()
+	}
 	if err != nil {
 		return nil, fmt.Errorf("failed to start command: %w", err)
 	}
