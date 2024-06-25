@@ -9,6 +9,7 @@ import (
 
 func TestProcess(t *testing.T) {
 	p := New(context.Background())
+	defer p.Close()
 	var complete sync.WaitGroup
 	complete.Add(2)
 	go func() {

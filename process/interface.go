@@ -10,6 +10,8 @@ type Process interface {
 	ResponseChan() <-chan *protocol.SpawnResponse
 	ErrorChan() <-chan error
 
+	Close() error
+
 	// wait the process complete.
 	// it seems that this API is not necessary.
 	// but useful in unit tests.
