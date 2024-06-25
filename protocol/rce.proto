@@ -1,0 +1,66 @@
+syntax = "proto3";
+package protocol;
+
+option go_package = "github.com/reyoung/rce/protocol";
+
+message SpawnRequest {
+  message File {
+    string filename = 1;
+    bytes content = 2;
+    bool executable = 3;
+    bool truncate = 4;
+  }
+
+  message Entry {
+    string command = 1;
+    repeated string args = 2;
+
+    message Env {
+      string key = 1;
+      string value = 2;
+    }
+    repeated Env envs = 3;
+
+    bool has_stdin = 4;
+    string dir = 5; // empty means a temporary directory
+  }
+
+  message Stdin {
+    bytes stdin = 1;
+  }
+
+  oneof payload {
+    File file = 1;
+    Entry entry = 2;
+    Stdin stdin = 3;
+  }
+}
+
+message PID {
+  string id = 1;
+}
+
+message SpawnResponse {
+  message Stdout {
+    bytes stdout = 1;
+  }
+
+  message Stderr {
+    bytes stderr = 1;
+  }
+
+  message Exit {
+    int32 code = 1;
+  }
+
+  oneof payload {
+    Stdout stdout = 1;
+    Stderr stderr = 2;
+    Exit exit = 3;
+    PID pid = 4;
+  }
+}
+
+service RemoteCodeExecutor {
+  rpc Spawn(stream SpawnRequest) returns (stream SpawnResponse) {}
+}
