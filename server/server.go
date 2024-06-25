@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/reyoung/rce/process"
 	"github.com/reyoung/rce/protocol"
+	"log"
 	"sync"
 )
 
@@ -38,6 +39,9 @@ func (p *processSetter) TrySet() {
 	}
 	p.s.mutex.Lock()
 	defer p.s.mutex.Unlock()
+	if p.s.processes == nil {
+		p.s.processes = make(map[string]process.Process)
+	}
 	p.s.processes[p.pid] = p.p
 }
 
@@ -61,7 +65,10 @@ func (s *Server) Spawn(svr protocol.RemoteCodeExecutor_SpawnServer) error {
 	complete.Add(2) // 2 means send/recv
 
 	go func() {
-		defer complete.Done()
+		defer func() {
+			complete.Done()
+			log.Printf("Writing request goroutine exit")
+		}()
 		for {
 			req, err := svr.Recv()
 			if err != nil {
@@ -78,6 +85,7 @@ func (s *Server) Spawn(svr protocol.RemoteCodeExecutor_SpawnServer) error {
 
 	go func() {
 		defer func() {
+			log.Printf("Reading response goroutine exit")
 			forceClose(exited)
 			complete.Done()
 		}()
