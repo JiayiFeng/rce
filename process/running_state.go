@@ -82,8 +82,27 @@ func (s *runningState) Output() <-chan *stateOutput {
 func (s *runningState) waitDone() {
 	err := s.Cmd.Wait()
 	if err != nil {
+		exitErr, ok := err.(*exec.ExitError)
+		if ok {
+			s.OutputChan <- &stateOutput{
+				Response: &protocol.SpawnResponse{
+					Payload: &protocol.SpawnResponse_Exit_{
+						Exit: &protocol.SpawnResponse_Exit{Code: int32(exitErr.ExitCode())},
+					},
+				},
+			}
+		} else {
+			s.OutputChan <- &stateOutput{
+				Error: fmt.Errorf("failed to wait for command: %w", err),
+			}
+		}
+	} else {
 		s.OutputChan <- &stateOutput{
-			Error: fmt.Errorf("failed to wait for command: %w", err),
+			Response: &protocol.SpawnResponse{
+				Payload: &protocol.SpawnResponse_Exit_{
+					Exit: &protocol.SpawnResponse_Exit{Code: 0},
+				},
+			},
 		}
 	}
 	s.OutputChan <- &stateOutput{
