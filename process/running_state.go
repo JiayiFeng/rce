@@ -182,14 +182,6 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 		}
 	}(s)
 
-	s.Stdout, err = cmd.StdoutPipe()
-	if err != nil {
-		return nil, err
-	}
-	s.Stderr, err = cmd.StderrPipe()
-	if err != nil {
-		return nil, err
-	}
 	outChan := make(chan *stateOutput, 1)
 	s.OutputChan = outChan
 	if head.AllocatePty {
@@ -202,8 +194,20 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 			row = 80
 		}
 		log.Printf("Starting command with pty, cols: %d, rows: %d", col, row)
-		s.Stdin, err = pty.StartWithSize(cmd, &pty.Winsize{Cols: uint16(col), Rows: uint16(row)})
+		var pty_ *os.File
+		pty_, err = pty.StartWithSize(cmd, &pty.Winsize{Cols: uint16(col), Rows: uint16(row)})
+		s.Stdout = pty_
+		s.Stderr = pty_
+		s.Stdin = pty_
 	} else {
+		s.Stdout, err = cmd.StdoutPipe()
+		if err != nil {
+			return nil, err
+		}
+		s.Stderr, err = cmd.StderrPipe()
+		if err != nil {
+			return nil, err
+		}
 		if head.HasStdin {
 			s.Stdin, err = cmd.StdinPipe()
 			if err != nil {
