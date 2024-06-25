@@ -190,7 +190,7 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 	}
 	outChan := make(chan *stateOutput, 1)
 	s.OutputChan = outChan
-	if false {
+	if head.AllocatePty {
 		col := head.GetWindowSize().GetCol()
 		if col == 0 {
 			col = 24
