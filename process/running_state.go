@@ -201,9 +201,8 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
         }
         log.Printf("Starting command with pty, cols: %d, rows: %d", col, row)
         s.Stdin, err = pty.StartWithSize(cmd, &pty.Winsize{Cols: uint16(col), Rows: uint16(row)})
-
-        pty.Setsize(s.Stdin.(*os.File), &pty.Winsize{Cols: uint16(col), Rows: uint16(row)})
-
+        cols, rows, _ := pty.Getsize(s.Stdin.(*os.File))
+        log.Printf("Started command with pty, cols: %d, rows: %d", cols, rows)
     } else {
         if head.HasStdin {
             s.Stdin, err = cmd.StdinPipe()
