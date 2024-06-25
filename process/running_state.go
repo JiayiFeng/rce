@@ -199,9 +199,21 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 		if err != nil {
 			return nil, fmt.Errorf("failed to start command with pty: %w", err)
 		}
-		s.Stdout = io.NopCloser(pty_)
-		s.Stderr = io.NopCloser(pty_)
-		s.Stdin = pty_
+
+		pr, pw := io.Pipe()
+		go func() {
+			defer pw.Close()
+			io.Copy(pw, pty_)
+		}()
+		pr2, pw2 := io.Pipe()
+		go func() {
+			defer pr2.Close()
+			io.Copy(pty_, pr2)
+		}()
+
+		s.Stdout = pr
+		s.Stderr = io.NopCloser(pr)
+		s.Stdin = pw2
 	} else {
 		s.Stdout, err = cmd.StdoutPipe()
 		if err != nil {
