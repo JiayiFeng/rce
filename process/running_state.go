@@ -57,8 +57,6 @@ func (s *runningState) processStdin(stdin *protocol.SpawnRequest_Stdin) error {
 	if err != nil {
 		return fmt.Errorf("failed to write to stdin: %w", err)
 	}
-	rows, cols, _ := pty.Getsize(s.Stdin.(*os.File))
-	log.Printf("Started command with pty, cols: %d, rows: %d", cols, rows)
 	return nil
 }
 
