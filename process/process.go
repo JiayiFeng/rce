@@ -126,6 +126,7 @@ func (p *process) wait() {
 
 func (p *process) Close() error {
     close(p.reqChan)
+    _ = p.Kill()
     err := p.curState.Close()
     for range p.stateOutputChan {
     }
