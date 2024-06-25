@@ -65,6 +65,7 @@ func (s *runningState) processStdin(stdin *protocol.SpawnRequest_Stdin) error {
 		if err != nil {
 			return fmt.Errorf("failed to close stdin: %w", err)
 		}
+		log.Printf("stdin closed")
 		s.Stdin = nil
 	}
 	return nil
@@ -92,6 +93,9 @@ func (s *runningState) Output() <-chan *stateOutput {
 }
 
 func (s *runningState) waitDone() {
+	defer func() {
+		log.Printf("waitDone done")
+	}()
 	err := s.Cmd.Wait()
 	if err != nil {
 		exitErr, ok := err.(*exec.ExitError)
