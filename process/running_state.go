@@ -53,9 +53,19 @@ func (s *runningState) processStdin(stdin *protocol.SpawnRequest_Stdin) error {
 	if s.Stdin == nil {
 		return errors.New("stdin not available")
 	}
-	_, err := s.Stdin.Write(stdin.Stdin)
-	if err != nil {
-		return fmt.Errorf("failed to write to stdin: %w", err)
+	if len(stdin.Stdin) != 0 {
+		_, err := s.Stdin.Write(stdin.Stdin)
+		if err != nil {
+			return fmt.Errorf("failed to write to stdin: %w", err)
+		}
+	}
+
+	if stdin.Eof {
+		err := s.Stdin.Close()
+		if err != nil {
+			return fmt.Errorf("failed to close stdin: %w", err)
+		}
+		s.Stdin = nil
 	}
 	return nil
 }

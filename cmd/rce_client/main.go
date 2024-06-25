@@ -152,6 +152,10 @@ func doRCE(arguments docopt.Opts, rceClient protocol.RemoteCodeExecutorClient, p
 				n, err := os.Stdin.Read(buf[:])
 				if err != nil {
 					if err == io.EOF {
+						emperror.Panic(cli.Send(&protocol.SpawnRequest{
+							Payload: &protocol.SpawnRequest_Stdin_{Stdin: &protocol.SpawnRequest_Stdin{
+								Eof: true,
+							}}}))
 						break
 					}
 					panic(err)

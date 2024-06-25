@@ -38,6 +38,7 @@ message SpawnRequest {
 
   message Stdin {
     bytes stdin = 1;
+    bool eof = 2;
   }
 
   oneof payload {
