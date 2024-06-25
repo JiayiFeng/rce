@@ -44,6 +44,11 @@ func (p *preparingState) processFileEvent(file *protocol.SpawnRequest_File) (err
 	if file.Executable {
 		perm = 0700
 	}
+	err = os.MkdirAll(path.Dir(file.Filename), 0700)
+	if err != nil {
+		return fmt.Errorf("failed to create dir %s: %w", path.Dir(file.Filename), err)
+	}
+
 	of, err := os.OpenFile(file.Filename, flag, perm)
 	if err != nil {
 		return fmt.Errorf("failed to open file %s: %w", file.Filename, err)
