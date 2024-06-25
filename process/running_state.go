@@ -203,7 +203,10 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 		if err != nil {
 			return nil, fmt.Errorf("failed to open pty file: %w", err)
 		}
-		s.Stderr = os.DevNull
+		s.Stderr, err = os.Open(os.DevNull)
+		if err != nil {
+			return nil, fmt.Errorf("failed to open null file: %w", err)
+		}
 		s.Stdin = pty_
 	} else {
 		s.Stdout, err = cmd.StdoutPipe()
