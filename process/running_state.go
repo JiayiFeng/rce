@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/reyoung/rce/protocol"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"sync"
@@ -189,7 +190,7 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 	}
 	outChan := make(chan *stateOutput, 1)
 	s.OutputChan = outChan
-	if head.AllocatePty {
+	if false {
 		col := head.GetWindowSize().GetCol()
 		if col == 0 {
 			col = 24
@@ -198,6 +199,7 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 		if row == 0 {
 			row = 80
 		}
+		log.Printf("Starting command with pty, cols: %d, rows: %d", col, row)
 		s.Stdin, err = pty.StartWithSize(cmd, &pty.Winsize{Cols: uint16(col), Rows: uint16(row)})
 	} else {
 		if head.HasStdin {
