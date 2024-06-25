@@ -152,16 +152,17 @@ func (s *runningState) startIOGoRoutines() {
 				Stdout: &protocol.SpawnResponse_Stdout{Stdout: append([]byte(nil), buf...)}}}
 		})
 	}()
-
-	s.Complete.Add(1)
-	go func() {
-		defer s.Complete.Done()
-		s.readOutput(s.Stderr, func(bytes []byte) *protocol.SpawnResponse {
-			return &protocol.SpawnResponse{Payload: &protocol.SpawnResponse_Stderr_{
-				Stderr: &protocol.SpawnResponse_Stderr{Stderr: append([]byte(nil), bytes...)},
-			}}
-		})
-	}()
+	if s.Stderr != nil {
+		s.Complete.Add(1)
+		go func() {
+			defer s.Complete.Done()
+			s.readOutput(s.Stderr, func(bytes []byte) *protocol.SpawnResponse {
+				return &protocol.SpawnResponse{Payload: &protocol.SpawnResponse_Stderr_{
+					Stderr: &protocol.SpawnResponse_Stderr{Stderr: append([]byte(nil), bytes...)},
+				}}
+			})
+		}()
+	}
 }
 
 func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *runningState, err error) {
@@ -210,7 +211,7 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 		}()
 
 		s.Stdout = pr
-		s.Stderr = io.NopCloser(pr)
+		s.Stderr = nil
 		s.Stdin = pw2
 	} else {
 		s.Stdout, err = cmd.StdoutPipe()
