@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/exec"
 	"sync"
+	"syscall"
 	"time"
 )
 
@@ -30,12 +31,15 @@ func (s *runningState) PID() string {
 }
 
 func (s *runningState) Kill() error {
+	log.Printf("Killing process")
 	p := s.Cmd.Process
 	if p == nil {
 		log.Printf("process not started")
 		return fmt.Errorf("process not started")
 	}
-	err := p.Kill()
+
+	// Kill the process group
+	err := syscall.Kill(-p.Pid, syscall.SIGKILL)
 	if err != nil {
 		log.Printf("failed to kill process: %s", err)
 	}

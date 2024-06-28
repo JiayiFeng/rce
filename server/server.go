@@ -57,6 +57,7 @@ func (p *processSetter) Unset() {
 func (s *Server) Spawn(svr protocol.RemoteCodeExecutor_SpawnServer) error {
 	p := process.New(svr.Context())
 	defer func() {
+		log.Printf("Closing process")
 		_ = p.Close()
 	}()
 
