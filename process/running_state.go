@@ -151,13 +151,13 @@ func (s *runningState) readOutput(reader io.ReadCloser, newResponse func([]byte)
 	}
 }
 
-func (s *runningState) startIOGoRoutines(cleanPath bool) {
+func (s *runningState) startIOGoRoutines(cleanPath string) {
 	s.Complete.Add(1)
 	go func() {
 		defer s.Complete.Done()
 		s.waitDone()
-		log.Printf("cleanPath: %v, path %s", cleanPath, s.Cmd.Path)
-		if cleanPath {
+		log.Printf("cleanPath: %s", cleanPath)
+		if cleanPath != "" {
 			os.RemoveAll(s.Cmd.Path)
 		}
 	}()
@@ -260,8 +260,12 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head, clea
 			},
 		},
 	}
+	cleanPathStr := ""
+	if cleanPath {
+		cleanPathStr = head.Path
+	}
 
-	s.startIOGoRoutines(cleanPath)
+	s.startIOGoRoutines(cleanPathStr)
 
 	return s, nil
 }
