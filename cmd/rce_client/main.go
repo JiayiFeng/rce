@@ -228,7 +228,7 @@ func main() {
 		os.Exit(errCode)
 	}
 
-	if allocateTTY {
+	if !allocateTTY {
 		go fn()
 		// wait for signal
 		sigChan := make(chan os.Signal, 1)
