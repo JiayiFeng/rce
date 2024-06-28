@@ -161,6 +161,7 @@ func (s *runningState) startIOGoRoutines(cleanPath string) {
 
 		go func() {
 			for {
+				log.Printf("cleanPath from here: %s", cleanPath)
 				err := os.RemoveAll(cleanPath)
 				if err != nil {
 					log.Printf("failed to remove dir: %s", err)
