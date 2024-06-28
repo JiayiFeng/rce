@@ -156,7 +156,7 @@ func (s *runningState) startIOGoRoutines(cleanPath bool) {
 	go func() {
 		defer s.Complete.Done()
 		s.waitDone()
-
+		log.Printf("cleanPath: %v, path %s", cleanPath, s.Cmd.Path)
 		if cleanPath {
 			os.RemoveAll(s.Cmd.Path)
 		}

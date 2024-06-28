@@ -196,8 +196,10 @@ func doRCE(arguments docopt.Opts, rceClient protocol.RemoteCodeExecutorClient, p
 
 func main() {
 	arguments, _ := docopt.ParseArgs(docs, nil, "Remote Code Executor Client 1.0")
-	if fd := int(os.Stdin.Fd()); term.IsTerminal(fd) {
-		panic2(term.MakeRaw(fd))
+	if arguments["--with-stdin"].(bool) {
+		if fd := int(os.Stdin.Fd()); term.IsTerminal(fd) {
+			panic2(term.MakeRaw(fd))
+		}
 	}
 	addr := arguments["--address"].(string)
 	client := panic2(grpc.NewClient(addr, grpc.WithCredentialsBundle(insecure.NewBundle())))
