@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/reyoung/rce/protocol"
+	"log"
 	"os"
 	"path"
 	"strings"
@@ -48,6 +49,7 @@ func (p *preparingState) processFileEvent(file *protocol.SpawnRequest_File) (err
 	if err != nil {
 		return fmt.Errorf("failed to create dir %s: %w", path.Dir(file.Filename), err)
 	}
+	log.Printf("Creating file %s", file.Filename)
 
 	of, err := os.OpenFile(file.Filename, flag, perm)
 	if err != nil {
