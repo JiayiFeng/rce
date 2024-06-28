@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/exec"
 	"sync"
+	"time"
 )
 
 type runningState struct {
@@ -157,9 +158,19 @@ func (s *runningState) startIOGoRoutines(cleanPath string) {
 		defer s.Complete.Done()
 		s.waitDone()
 		log.Printf("cleanPath: %s", cleanPath)
-		if cleanPath != "" {
-			os.RemoveAll(s.Cmd.Path)
-		}
+
+		go func() {
+			for {
+				err := os.RemoveAll(cleanPath)
+				if err != nil {
+					log.Printf("failed to remove dir: %s", err)
+					time.Sleep(time.Minute)
+					continue
+				}
+				break
+			}
+
+		}()
 	}()
 
 	s.Complete.Add(1)
