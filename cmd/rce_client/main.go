@@ -11,15 +11,18 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"io"
+	"log"
 	"os"
+	"os/signal"
 	"strings"
 	"sync"
+	"syscall"
 )
 
 const docs = `Remote Code Executor Client
 
 Usage:
-    rce_client [--with-stdin] [--env=<e>]...
+    rce_client [--with-stdin] [--env=<e>]... [--pid-file=<p>]
         [--upload=<u>]... [--dir=<dir>] --address=<a> -- <command> [<args>]...
     rce_client -h | --help
     rce_client --version
@@ -32,6 +35,7 @@ Options:
     --address=<a>             Remote server address.
     --env=<e>                 Environment variables. format are "key=value".
     --with-stdin              With stdin.
+    --pid-file=<p>            Pid file.
     <command>                 Command to run.
     <args>                    Arguments of command.
 `
@@ -178,6 +182,10 @@ func doRCE(arguments docopt.Opts, rceClient protocol.RemoteCodeExecutorClient, p
 		}
 		if *pid == "" {
 			*pid = rsp.GetPid().GetId()
+
+			if *pid != "" && arguments["--pid-file"] != nil {
+				emperror.Panic(os.WriteFile(arguments["--pid-file"].(string), []byte(*pid), 0600))
+			}
 		}
 		if rsp.GetError() != nil {
 			panic(rsp.GetError().Error)
@@ -208,10 +216,18 @@ func main() {
 	pid := ""
 	defer func() {
 		if pid != "" {
+			log.Printf("Killing pid %s", pid)
 			_, _ = rceClient.Kill(context.Background(), &protocol.PID{Id: pid})
 		}
 	}()
 
-	errCode := doRCE(arguments, rceClient, &pid)
-	os.Exit(errCode)
+	go func() {
+		errCode := doRCE(arguments, rceClient, &pid)
+		os.Exit(errCode)
+	}()
+
+	// signal
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	<-sigChan
 }
