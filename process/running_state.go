@@ -37,19 +37,11 @@ func (s *runningState) Kill() error {
 		log.Printf("process not started")
 		return fmt.Errorf("process not started")
 	}
-	log.Printf("kill pid %d", p.Pid)
 
-	err := exec.Command("pkill", "-P", fmt.Sprintf("%d", p.Pid), "-TERM").Run()
+	err := syscall.Kill(-p.Pid, syscall.SIGKILL)
 	if err != nil {
-		log.Printf("failed to kill process: %s", err)
-		return err
+		return fmt.Errorf("failed to kill process: %w", err)
 	}
-
-	go func() {
-		time.Sleep(time.Second * 15)
-		_ = exec.Command("pkill", "-P", fmt.Sprintf("%d", p.Pid), "-KILL").Run()
-	}()
-
 	return err
 }
 
