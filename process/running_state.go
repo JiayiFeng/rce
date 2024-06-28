@@ -212,10 +212,6 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head, clea
 		cmd.Env = append(cmd.Env, env.Key+"="+env.Value)
 	}
 
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Setpgid: true,
-		Pgid:    0,
-	}
 	s = &runningState{
 		Cmd: cmd,
 	}
@@ -258,6 +254,10 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head, clea
 		s.Stderr = nil
 		s.Stdin = pw2
 	} else {
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			Setpgid: true,
+			Pgid:    0,
+		}
 		s.Stdout, err = cmd.StdoutPipe()
 		if err != nil {
 			return nil, err
