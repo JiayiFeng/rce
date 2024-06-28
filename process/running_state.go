@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/exec"
 	"sync"
+	"syscall"
 	"time"
 )
 
@@ -113,6 +114,7 @@ func (s *runningState) waitDone() {
 		log.Printf("waitDone done")
 	}()
 	err := s.Cmd.Wait()
+	log.Printf("waitDone err: %v", err)
 	if err != nil {
 		exitErr, ok := err.(*exec.ExitError)
 		if ok {
@@ -217,6 +219,11 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head, clea
 	for _, env := range head.Envs {
 		cmd.Env = append(cmd.Env, env.Key+"="+env.Value)
 	}
+
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setpgid: true,
+		Pgid:    0,
+	}
 	s = &runningState{
 		Cmd: cmd,
 	}
@@ -274,6 +281,7 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head, clea
 			}
 		}
 		err = cmd.Start()
+		log.Printf("Start process %d", cmd.Process.Pid)
 
 		if err != nil {
 			return nil, fmt.Errorf("failed to start command: %w", err)
