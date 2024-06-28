@@ -151,11 +151,15 @@ func (s *runningState) readOutput(reader io.ReadCloser, newResponse func([]byte)
 	}
 }
 
-func (s *runningState) startIOGoRoutines() {
+func (s *runningState) startIOGoRoutines(cleanPath bool) {
 	s.Complete.Add(1)
 	go func() {
 		defer s.Complete.Done()
 		s.waitDone()
+
+		if cleanPath {
+			os.RemoveAll(s.Cmd.Path)
+		}
 	}()
 
 	s.Complete.Add(1)
@@ -179,7 +183,7 @@ func (s *runningState) startIOGoRoutines() {
 	}
 }
 
-func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *runningState, err error) {
+func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head, cleanPath bool) (s *runningState, err error) {
 	cmd := exec.CommandContext(ctx, head.Command, head.Args...)
 	cmd.Dir = head.Path
 	cmd.Env = append([]string(nil), os.Environ()...)
@@ -257,7 +261,7 @@ func newRunningState(ctx context.Context, head *protocol.SpawnRequest_Head) (s *
 		},
 	}
 
-	s.startIOGoRoutines()
+	s.startIOGoRoutines(cleanPath)
 
 	return s, nil
 }

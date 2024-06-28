@@ -65,7 +65,11 @@ func (p *preparingState) processFileEvent(file *protocol.SpawnRequest_File) (err
 
 func (p *preparingState) processStartEvent(
 	ctx context.Context, start *protocol.SpawnRequest_Start) (newState state, err error) {
-	return newRunningState(ctx, p.head)
+	newState, err = newRunningState(ctx, p.head, p.cleanPath)
+	if err == nil {
+		p.cleanPath = false
+	}
+	return newState, err
 }
 
 func (p *preparingState) Output() <-chan *stateOutput {
