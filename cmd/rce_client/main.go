@@ -204,8 +204,10 @@ func doRCE(arguments docopt.Opts, rceClient protocol.RemoteCodeExecutorClient, p
 
 func main() {
 	arguments, _ := docopt.ParseArgs(docs, nil, "Remote Code Executor Client 1.0")
+	allocateTTY := false
 	if arguments["--with-stdin"].(bool) {
 		if fd := int(os.Stdin.Fd()); term.IsTerminal(fd) {
+			allocateTTY = true
 			panic2(term.MakeRaw(fd))
 		}
 	}
@@ -221,13 +223,18 @@ func main() {
 		}
 	}()
 
-	go func() {
+	fn := func() {
 		errCode := doRCE(arguments, rceClient, &pid)
 		os.Exit(errCode)
-	}()
+	}
 
-	// signal
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-	<-sigChan
+	if allocateTTY {
+		go fn()
+		// wait for signal
+		sigChan := make(chan os.Signal, 1)
+		signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+		<-sigChan
+	} else {
+		fn()
+	}
 }

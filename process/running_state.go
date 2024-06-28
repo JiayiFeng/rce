@@ -32,9 +32,14 @@ func (s *runningState) PID() string {
 func (s *runningState) Kill() error {
 	p := s.Cmd.Process
 	if p == nil {
+		log.Printf("process not started")
 		return fmt.Errorf("process not started")
 	}
-	return p.Kill()
+	err := p.Kill()
+	if err != nil {
+		log.Printf("failed to kill process: %s", err)
+	}
+	return err
 }
 
 func (s *runningState) ProcessEvent(ctx context.Context, event *protocol.SpawnRequest) (newState state, err error) {
